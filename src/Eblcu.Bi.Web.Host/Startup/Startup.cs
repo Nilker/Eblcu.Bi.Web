@@ -88,7 +88,20 @@ namespace Eblcu.Bi.Web.Startup
             services.AddSwaggerGen(options =>
             {
                 options.SwaggerDoc("v1", new Info { Title = "Bi API", Version = "v1" });
-                options.DocInclusionPredicate((docName, description) => true);
+                options.DocInclusionPredicate((docName, description) => true); //显示备注
+
+                options.IncludeXmlComments(GetXmlCommentsPath("Eblcu.Bi.Application"));          // 注意：此处替换成所生成的XML documentation的文件名。
+
+                // Define the BearerAuth scheme that's in use
+                options.AddSecurityDefinition("bearerAuth", new ApiKeyScheme()
+                {
+                    Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+                    Name = "Authorization",
+                    In = "header",
+                    Type = "apiKey"
+                });
+                // Assign scope requirements to operations based on AuthorizeAttribute
+                options.OperationFilter<SecurityRequirementsOperationFilter>();
             });
 
             //Recaptcha
@@ -194,5 +207,13 @@ namespace Eblcu.Bi.Web.Startup
             });
         }
 #endif
+        /// 获取帮助文件路径
+        /// </summary>
+        /// <param name="name">文件名</param>
+        /// <returns></returns>
+        protected string GetXmlCommentsPath(string name)
+        {
+            return string.Format(@"{0}{1}.xml", AppDomain.CurrentDomain.BaseDirectory, name);
+        }
     }
 }
