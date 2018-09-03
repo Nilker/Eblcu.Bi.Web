@@ -40,4 +40,8 @@
     <DefineConstants>FEATURE_LDAP;FEATURE_SIGNALR</DefineConstants>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net461|AnyCPU'">
+    <DocumentationFile>C:\Users\lihl\Desktop\zs\aspnet-core2\src\Eblcu.Bi.Web.Host\bin\Debug\netcoreapp2.0\Eblcu.Bi.Application.xml</DocumentationFile>
+  </PropertyGroup>
+
 </Project>

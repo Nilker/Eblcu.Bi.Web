@@ -20,6 +20,7 @@ using Abp.Runtime.Security;
 using Abp.Runtime.Session;
 using Abp.Timing;
 using Abp.UI;
+using Abp.Web.Models;
 using Abp.Zero.Configuration;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -567,6 +568,110 @@ namespace Eblcu.Bi.Web.Controllers
             }
 
             return returnUrl;
+        }
+
+
+
+
+
+
+        [HttpPost]
+        [DontWrapResult]
+        public async Task<ResultJsonObjModel> Applogin([FromBody] AuthenticateModel model)
+        {
+            try
+            {
+                var loginResult = await GetLoginResultAsync(
+                    model.UserNameOrEmailAddress,
+                    model.Password,
+                    GetTenancyNameOrNull()
+                );
+                var accessToken = CreateAccessToken(CreateJwtClaims(loginResult.Identity));
+
+                var token = new AuthenticateResultModel
+                {
+                    AccessToken = accessToken,
+                    EncryptedAccessToken = GetEncrpyedAccessToken(accessToken),
+                    ExpireInSeconds = (int)_configuration.Expiration.TotalSeconds,
+                    UserId = loginResult.User.Id
+                };
+
+                return new ResultJsonObjModel(token);
+            }
+            catch (Exception ex)
+            {
+                return new ResultJsonObjModel(-1, ex.Message);
+            }
+        }
+
+    }
+
+    public class ResultJsonObjModel
+    {
+
+        /// <summary>
+        /// 接口返回数据
+        /// </summary>
+        /// <param name="responseNum"> -1失败，0：成功</param>
+        public ResultJsonObjModel(int responseNum)
+        {
+            ResponseNum = responseNum;
+        }
+
+        /// <summary>
+        /// 接口返回数据
+        /// </summary>
+        /// <param name="resultObj">数据</param>
+        public ResultJsonObjModel(object resultObj)
+        {
+            ResponseNum = 0;
+            ResultObj = resultObj;
+        }
+
+        /// <summary>
+        /// 接口返回数据
+        /// </summary>
+        /// <param name="responseNum"> -1失败，0：成功</param>
+        /// <param name="message"> 消息</param>
+        public ResultJsonObjModel(int responseNum, string message)
+        {
+            ResponseNum = responseNum;
+            Message = message;
+        }
+
+
+        /// <summary>
+        /// 接口返回数据
+        /// </summary>
+        /// <param name="responseNum"> -1失败，0：成功</param>
+        /// <param name="errorCode"> 错误代码</param>
+        /// <param name="message">消息</param>
+        /// <param name="resultObj">数据</param>
+        public ResultJsonObjModel(int responseNum, string errorCode, string message, object resultObj)
+        {
+            ResponseNum = responseNum;
+            ErrorCode = errorCode;
+            Message = message;
+            ResultObj = resultObj;
+        }
+
+        /// <summary>
+        ///  -1失败，0：成功
+        /// </summary>
+        public int ResponseNum { get; set; }
+
+        /// <summary>
+        /// 错误代码
+        /// </summary>
+        public string ErrorCode { get; set; }
+
+        public string Message { get; set; }
+
+        public object ResultObj { get; set; }
+
+        public ResultJsonObjModel()
+        {
+            ResultObj = new object();
         }
     }
 }

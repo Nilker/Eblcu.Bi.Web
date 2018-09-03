@@ -16,6 +16,7 @@ using Abp.Notifications;
 using Abp.Organizations;
 using Abp.Runtime.Session;
 using Abp.UI;
+using Abp.Web.Models;
 using Abp.Zero.Configuration;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -208,6 +209,22 @@ namespace Eblcu.Bi.Authorization.Users
             };
         }
 
+        /// <summary>
+        /// 获取用户现有的权限
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        [DontWrapResult]
+        public async Task<ResultJsonObj> GetUserGrantedPermissions(EntityDto<long> input)
+        {
+            var user = await UserManager.GetUserByIdAsync(input.Id);
+            var grantedPermissions = UserManager.GetGrantedPermissionsAsync(user).Result;
+            var granteds = ObjectMapper.Map<List<FlatPermissionDto>>(grantedPermissions);
+            granteds.ForEach(s => { s.IsParent = !s.Name.Contains("."); });
+
+            return new ResultJsonObj(granteds.Where(s => s.ParentName != null).OrderBy(p => p.DisplayName).ToList());
+        }
+
         [AbpAuthorize(AppPermissions.Pages_Administration_Users_ChangePermissions)]
         public async Task ResetUserSpecificPermissions(EntityDto<long> input)
         {
@@ -305,7 +322,7 @@ namespace Eblcu.Bi.Authorization.Users
             user.TenantId = AbpSession.TenantId;
 
             //Set password
-            if (input.SetRandomPassword|| input.User.Password.IsNullOrEmpty())
+            if (input.SetRandomPassword || input.User.Password.IsNullOrEmpty())
             {
                 input.User.Password = User.CreateRandomPassword();
             }

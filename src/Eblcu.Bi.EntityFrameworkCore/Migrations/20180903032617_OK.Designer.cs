@@ -18,9 +18,10 @@ using System;
 namespace Eblcu.Bi.Migrations
 {
     [DbContext(typeof(BiDbContext))]
-    partial class BiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180903032617_OK")]
+    partial class OK
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1235,7 +1236,7 @@ namespace Eblcu.Bi.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("charge_studentsdata","CMS");
+                    b.ToTable("charge_studentsdatas","CMS");
                 });
 
             modelBuilder.Entity("Eblcu.Bi.Student.drop_out_studentsdata", b =>
@@ -1321,7 +1322,7 @@ namespace Eblcu.Bi.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("drop_out_studentsdata","CMS");
+                    b.ToTable("drop_out_studentsdatas","CMS");
                 });
 
             modelBuilder.Entity("Eblcu.Bi.Student.entry_recruit_studentsdata", b =>
@@ -1398,7 +1399,7 @@ namespace Eblcu.Bi.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("entry_recruit_studentsdata","CMS");
+                    b.ToTable("entry_recruit_studentsdatas","CMS");
                 });
 
             modelBuilder.Entity("Eblcu.Bi.Student.graduate_studentsdata", b =>
@@ -1478,7 +1479,7 @@ namespace Eblcu.Bi.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("graduate_studentsdata","CMS");
+                    b.ToTable("graduate_studentsdatas","CMS");
                 });
 
             modelBuilder.Entity("Eblcu.Bi.Student.nograduate_studentsdata", b =>
@@ -1576,7 +1577,7 @@ namespace Eblcu.Bi.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("nograduate_studentsdata","CMS");
+                    b.ToTable("nograduate_studentsdatas","CMS");
                 });
 
             modelBuilder.Entity("Eblcu.Bi.Student.zhx_student_inreading", b =>
@@ -1647,7 +1648,7 @@ namespace Eblcu.Bi.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("zhx_student_inreading","CMS");
+                    b.ToTable("zhx_student_inreadings","CMS");
                 });
 
             modelBuilder.Entity("Eblcu.Bi.Editions.SubscribableEdition", b =>
