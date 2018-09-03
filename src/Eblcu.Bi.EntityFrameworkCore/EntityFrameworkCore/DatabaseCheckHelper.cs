@@ -14,19 +14,20 @@ namespace Eblcu.Bi.EntityFrameworkCore
                 return true;
             }
 
-            using (DbConnection connection = new SqlConnection(connectionString))
-            {
-                try
-                {
-                    connection.Open();
-                }
-                catch
-                {
-                    return false;
-                }
+            //using (DbConnection connection = new SqlConnection(connectionString))
+            //{
+            //    try
+            //    {
+            //        connection.Open();
+            //    }
+            //    catch
+            //    {
+            //        return false;
+            //    }
 
-                return true;
-            }
+            //    return true;
+            //}
+            return true;
         }
     }
 }

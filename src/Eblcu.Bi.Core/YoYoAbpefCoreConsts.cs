@@ -9,7 +9,7 @@ namespace Eblcu.Bi
 
             public const string ABP = "ABP";
 
-            public const string CMS = "CMS";
+            public const string CMS = "liferay_zhx_dev";
         }
 
         /// <summary>
