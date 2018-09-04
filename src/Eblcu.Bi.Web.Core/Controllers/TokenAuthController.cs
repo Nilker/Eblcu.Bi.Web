@@ -573,8 +573,11 @@ namespace Eblcu.Bi.Web.Controllers
 
 
 
-
-
+        /// <summary>
+        /// app 登录接口，非必填不用关注
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost]
         [DontWrapResult]
         public async Task<ResultJsonObjModel> Applogin([FromBody] AuthenticateModel model)
