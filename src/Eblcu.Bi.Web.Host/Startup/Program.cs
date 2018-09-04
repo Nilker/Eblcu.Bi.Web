@@ -12,6 +12,7 @@ namespace Eblcu.Bi.Web.Startup
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseIISIntegration()
                 .UseStartup<Startup>()
+                .UseUrls("http://*:5000")
                 .Build();
 
             host.Run();

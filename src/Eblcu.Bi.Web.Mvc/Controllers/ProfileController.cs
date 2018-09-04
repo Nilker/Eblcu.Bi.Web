@@ -75,7 +75,7 @@ namespace Eblcu.Bi.Web.Controllers
         private FileResult GetDefaultProfilePicture()
         {
             return File(
-                @"Common\Images\default-profile-picture.png",
+                @"Common/Images/default-profile-picture.png",
                 MimeTypeNames.ImagePng
             );
         }
