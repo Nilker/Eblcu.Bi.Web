@@ -3,8 +3,7 @@ using System.IO;
 using System.Text;
 using Abp.AspNetCore;
 using Abp.AspNetCore.Configuration;
-using Abp.AspNetZeroCore.Licensing;
-using Abp.AspNetZeroCore.Web;
+using ORS.AspNetZeroCore.Web;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.Hangfire;
@@ -31,7 +30,7 @@ namespace Eblcu.Bi.Web
     [DependsOn(
         typeof(BiApplicationModule),
         typeof(BiEntityFrameworkCoreModule),
-        typeof(AbpAspNetZeroCoreWebModule),
+        typeof(AspNetZeroCoreWebModule),
 #if FEATURE_SIGNALR
         typeof(AbpWebSignalRModule),
 #endif

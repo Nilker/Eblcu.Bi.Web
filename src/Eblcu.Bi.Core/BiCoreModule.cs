@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
-using Abp.AspNetZeroCore;
-using Abp.AspNetZeroCore.Timing;
+using ORS.AspNetZeroCore ;
+using ORS.AspNetZeroCore .Timing;
 using Abp.AutoMapper;
 using Abp.Dependency;
 using Abp.Modules;
@@ -40,7 +40,7 @@ namespace Eblcu.Bi
         typeof(AbpZeroLdapModule),
 #endif
         typeof(AbpAutoMapperModule),
-        typeof(AbpAspNetZeroCoreModule),
+        typeof(AspNetZeroCoreModule),
         typeof(AbpMailKitModule))]
     public class BiCoreModule : AbpModule
     {

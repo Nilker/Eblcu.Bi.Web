@@ -28,7 +28,6 @@
     <PackageReference Include="Abp.AutoMapper" Version="3.3.0" />
     <PackageReference Include="Abp.MailKit" Version="3.3.0" />
     <PackageReference Include="Castle.Windsor.MsDependencyInjection" Version="3.3.0" />
-    <PackageReference Include="Abp.AspNetZeroCore" Version="1.0.14" />
     <PackageReference Include="TimeZoneConverter" Version="2.2.1" />
   </ItemGroup>
 
@@ -53,6 +52,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Eblcu.Bi.Core.Shared\Eblcu.Bi.Core.Shared.csproj" />
+    <ProjectReference Include="..\ORS.AspNetZeroCore\ORS.AspNetZeroCore.csproj" />
   </ItemGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)'=='net461'">

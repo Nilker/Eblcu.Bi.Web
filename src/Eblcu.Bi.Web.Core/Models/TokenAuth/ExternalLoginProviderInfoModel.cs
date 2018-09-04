@@ -1,4 +1,4 @@
-﻿using Abp.AspNetZeroCore.Web.Authentication.External;
+﻿using ORS.AspNetZeroCore .Web.Authentication.External;
 using Abp.AutoMapper;
 
 namespace Eblcu.Bi.Web.Models.TokenAuth
