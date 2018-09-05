@@ -14,7 +14,7 @@ using Eblcu.Bi.Identity;
 #if FEATURE_SIGNALR
 using Owin;
 using Abp.Owin;
-using Abp.AspNetZeroCore.Web.Owin;
+using ORS.AspNetZeroCore .Web.Owin;
 #endif
 
 namespace Eblcu.Bi.Web.Public.Startup

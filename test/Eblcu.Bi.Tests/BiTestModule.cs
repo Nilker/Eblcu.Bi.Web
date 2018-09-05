@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using Abp.AspNetZeroCore;
+using ORS.AspNetZeroCore ;
 using Abp.AutoMapper;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
@@ -55,7 +55,7 @@ namespace Eblcu.Bi.Tests
             Configuration.ReplaceService<IAppConfigurationAccessor, TestAppConfigurationAccessor>();
             Configuration.ReplaceService<IEmailSender, NullEmailSender>(DependencyLifeStyle.Transient);
 
-            Configuration.Modules.AspNetZero().LicenseCode = configuration["AbpZeroLicenseCode"];
+            //Configuration.Modules.AspNetZero().LicenseCode = configuration["AbpZeroLicenseCode"];
         }
 
         public override void Initialize()
