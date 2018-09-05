@@ -226,6 +226,10 @@ namespace Eblcu.Bi.Authorization.Users
         }
 
 
+        /// <summary>
+        /// 获取当前登录用户的 权限
+        /// </summary>
+        /// <returns></returns>
         [DontWrapResult]
         public async Task<List<FlatPermissionDto>> GeCurrentUserGrantedPermissions()
         {
@@ -235,6 +239,40 @@ namespace Eblcu.Bi.Authorization.Users
             granteds.ForEach(s => { s.IsParent = !s.Name.Contains("."); });
 
             return (granteds.Where(s => s.ParentName != null).OrderBy(p => p.DisplayName).ToList());
+        }
+
+
+        /// <summary>
+        /// 获取用户现有的权限-----目录
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        [DontWrapResult]
+        public async Task<ResultJsonObj> GetUserGrantedPermissions_Parent(EntityDto<long> input)
+        {
+            var user = await UserManager.GetUserByIdAsync(input.Id);
+            var grantedPermissions = UserManager.GetGrantedPermissionsAsync(user).Result;
+            var granteds = ObjectMapper.Map<List<FlatPermissionDto>>(grantedPermissions);
+            granteds.ForEach(s => { s.IsParent = !s.Name.Contains("."); });
+
+            return new ResultJsonObj(granteds.Where(s => s.ParentName != null&&s.IsParent).OrderBy(p => p.DisplayName).ToList());
+        }
+
+        /// <summary>
+        /// 获取用户现有的权限-----列表
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="parentName"></param>
+        /// <returns></returns>
+        [DontWrapResult]
+        public async Task<ResultJsonObj> GetUserGrantedPermissions_Child(EntityDto<long> input,string parentName)
+        {
+            var user = await UserManager.GetUserByIdAsync(input.Id);
+            var grantedPermissions = UserManager.GetGrantedPermissionsAsync(user).Result;
+            var granteds = ObjectMapper.Map<List<FlatPermissionDto>>(grantedPermissions);
+            granteds.ForEach(s => { s.IsParent = !s.Name.Contains("."); });
+
+            return new ResultJsonObj(granteds.Where(s => s.ParentName != null && s.ParentName==parentName).OrderBy(p => p.DisplayName).ToList());
         }
 
 

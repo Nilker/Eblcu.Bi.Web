@@ -43,5 +43,15 @@ namespace Eblcu.Bi.Student
             _nograduate_studentsdataRepository = nograduate_studentsdataRepository;
             _zhx_student_inreadingRepository = zhx_student_inreadingRepository;
         }
+
+
+        /// <summary>
+        /// 省份数据
+        /// </summary>
+        /// <returns></returns>
+        public async Task<ResultJsonObj> Province_Data()
+        {
+            return null;
+        }
     }
 }

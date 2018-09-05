@@ -31,5 +31,20 @@ namespace Eblcu.Bi.Authorization.Users
         Task<ResultJsonObj> GetUserGrantedPermissions(EntityDto<long> input);
 
         Task<List<FlatPermissionDto>> GeCurrentUserGrantedPermissions();
+
+        /// <summary>
+        /// 获取用户现有的权限-----目录
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        Task<ResultJsonObj> GetUserGrantedPermissions_Parent(EntityDto<long> input);
+
+        /// <summary>
+        /// 获取用户现有的权限-----列表
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="parentName"></param>
+        /// <returns></returns>
+        Task<ResultJsonObj> GetUserGrantedPermissions_Child(EntityDto<long> input, string parentName);
     }
 }
