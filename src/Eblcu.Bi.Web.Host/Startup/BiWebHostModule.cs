@@ -34,14 +34,13 @@ namespace Eblcu.Bi.Web.Startup
         public override void PreInitialize()
         {
             Configuration.Modules.AbpWebCommon().MultiTenancy.DomainFormat = _appConfiguration["App:ServerRootAddress"] ?? "http://localhost:22742/";
-            Configuration.Modules.AspNetZero().LicenseCode = _appConfiguration["AbpZeroLicenseCode"];
+            //Configuration.Modules.AspNetZero().LicenseCode = _appConfiguration["AbpZeroLicenseCode"];
 
             //Configuration for all caches
             Configuration.Caching.ConfigureAll(cache =>
                 {
                     cache.DefaultSlidingExpireTime = System.TimeSpan.FromSeconds(1);
                 });
-            //Configuration.Modules.AspNetZero().LicenseCode = _appConfiguration["AbpZeroLicenseCode"];
         }
 
         public override void Initialize()

@@ -1,11 +1,20 @@
-﻿using Abp.Application.Navigation;
+﻿using System.Linq;
+using Abp.Application.Navigation;
 using Abp.Localization;
 using Eblcu.Bi.Authorization;
+using Eblcu.Bi.Authorization.Users;
+using Eblcu.Bi.StudentPermissions;
 
 namespace Eblcu.Bi.Web.Areas.AppAreaName.Startup
 {
     public class AppAreaNameNavigationProvider : NavigationProvider
     {
+        private readonly IUserAppService _userAppService;
+        public AppAreaNameNavigationProvider(IUserAppService userAppService)
+        {
+            _userAppService = userAppService;
+        }
+
         public const string MenuName = "App";
 
         public override void SetNavigation(INavigationProviderContext context)
@@ -126,6 +135,121 @@ namespace Eblcu.Bi.Web.Areas.AppAreaName.Startup
                         requiredPermissionName: AppPermissions.Pages_DemoUiComponents
                     )
                 );
+
+
+            #region 动态菜单
+
+           //var currentUserPer= _userAppService.GeCurrentUserGrantedPermissions().Result;
+
+           // foreach (var item in currentUserPer.Where(s=>s.IsParent))
+           // {
+           //     menu.AddItem(new MenuItemDefinition(
+           //         item.Name,
+           //         L(item.Name),
+           //         icon: "flaticon-interface-8"
+           //     ));
+           // }
+
+            //招生录取
+            menu.AddItem(new MenuItemDefinition(
+                StudentAppPermissions.EnrollRecruit,
+                L(StudentAppPermissions.EnrollRecruit),
+                icon: "flaticon-interface-8"
+            ).AddItem(new MenuItemDefinition(
+                    StudentAppPermissions.EnrollRecruit_EveryYear_GQZ_EnrollRecruit_Count,
+                    L(StudentAppPermissions.EnrollRecruit_EveryYear_GQZ_EnrollRecruit_Count),
+                    url: StudentAppPermissions.EnrollRecruit_EveryYear_GQZ_EnrollRecruit_Count.Replace('.', '/'),
+                    icon: "flaticon-shapes",
+                    requiredPermissionName: StudentAppPermissions.EnrollRecruit_EveryYear_GQZ_EnrollRecruit_Count
+                    ))
+                .AddItem(new MenuItemDefinition(
+                    StudentAppPermissions.EnrollRecruit_EveryYear_ZSB_EnrollRecruit_Count,
+                    L(StudentAppPermissions.EnrollRecruit_EveryYear_ZSB_EnrollRecruit_Count),
+                    url: StudentAppPermissions.EnrollRecruit_EveryYear_ZSB_EnrollRecruit_Count.Replace('.', '/'),
+                    icon: "flaticon-shapes",
+                    requiredPermissionName: StudentAppPermissions.EnrollRecruit_EveryYear_ZSB_EnrollRecruit_Count
+                ))
+                .AddItem(new MenuItemDefinition(
+                    StudentAppPermissions.EnrollRecruit_EveryYear_EnrollRecruit_Count,
+                    L(StudentAppPermissions.EnrollRecruit_EveryYear_EnrollRecruit_Count),
+                    url: StudentAppPermissions.EnrollRecruit_EveryYear_EnrollRecruit_Count.Replace('.', '/'),
+                    icon: "flaticon-shapes",
+                    requiredPermissionName: StudentAppPermissions.EnrollRecruit_EveryYear_EnrollRecruit_Count
+                ))
+                .AddItem(new MenuItemDefinition(
+                    StudentAppPermissions.EnrollRecruit_EveryYear_Recruit_Per,
+                    L(StudentAppPermissions.EnrollRecruit_EveryYear_Recruit_Per),
+                    url: StudentAppPermissions.EnrollRecruit_EveryYear_Recruit_Per.Replace('.', '/'),
+                    icon: "flaticon-shapes",
+                    requiredPermissionName: StudentAppPermissions.EnrollRecruit_EveryYear_Recruit_Per
+                ))
+                .AddItem(new MenuItemDefinition(
+                    StudentAppPermissions.EnrollRecruit_Province_Data,
+                    L(StudentAppPermissions.EnrollRecruit_Province_Data),
+                    url: StudentAppPermissions.EnrollRecruit_Province_Data.Replace('.', '/'),
+                    icon: "flaticon-shapes",
+                    requiredPermissionName: StudentAppPermissions.EnrollRecruit_Province_Data
+                ))
+                .AddItem(new MenuItemDefinition(
+                    StudentAppPermissions.EnrollRecruit_CurrentBatch_Recruit_AgeSex_Count,
+                    L(StudentAppPermissions.EnrollRecruit_CurrentBatch_Recruit_AgeSex_Count),
+                    url: StudentAppPermissions.EnrollRecruit_CurrentBatch_Recruit_AgeSex_Count.Replace('.', '/'),
+                    icon: "flaticon-shapes",
+                    requiredPermissionName: StudentAppPermissions.EnrollRecruit_CurrentBatch_Recruit_AgeSex_Count
+                ))
+                .AddItem(new MenuItemDefinition(
+                    StudentAppPermissions.EnrollRecruit_CurrentBatch_EveryProfession_Recruit_Count,
+                    L(StudentAppPermissions.EnrollRecruit_CurrentBatch_EveryProfession_Recruit_Count),
+                    url: StudentAppPermissions.EnrollRecruit_CurrentBatch_EveryProfession_Recruit_Count.Replace('.', '/'),
+                    icon: "flaticon-shapes",
+                    requiredPermissionName: StudentAppPermissions.EnrollRecruit_CurrentBatch_EveryProfession_Recruit_Count
+                ))
+                .AddItem(new MenuItemDefinition(
+                    StudentAppPermissions.EnrollRecruit_EveryStation_EnrollRecruit_Count,
+                    L(StudentAppPermissions.EnrollRecruit_EveryStation_EnrollRecruit_Count),
+                    url: StudentAppPermissions.EnrollRecruit_EveryStation_EnrollRecruit_Count.Replace('.', '/'),
+                    icon: "flaticon-shapes",
+                    requiredPermissionName: StudentAppPermissions.EnrollRecruit_EveryStation_EnrollRecruit_Count
+                ))
+                .AddItem(new MenuItemDefinition(
+                    StudentAppPermissions.EnrollRecruit_EveryBatch_Recruit_Sex_Count,
+                    L(StudentAppPermissions.EnrollRecruit_EveryBatch_Recruit_Sex_Count),
+                    url: StudentAppPermissions.EnrollRecruit_EveryBatch_Recruit_Sex_Count.Replace('.', '/'),
+                    icon: "flaticon-shapes",
+                    requiredPermissionName: StudentAppPermissions.EnrollRecruit_EveryBatch_Recruit_Sex_Count
+                ))
+                .AddItem(new MenuItemDefinition(
+                    StudentAppPermissions.EnrollRecruit_Profession_Data,
+                    L(StudentAppPermissions.EnrollRecruit_Profession_Data),
+                    url: StudentAppPermissions.EnrollRecruit_Profession_Data.Replace('.', '/'),
+                    icon: "flaticon-shapes",
+                    requiredPermissionName: StudentAppPermissions.EnrollRecruit_Profession_Data
+                ))
+                .AddItem(new MenuItemDefinition(
+                    StudentAppPermissions.EnrollRecruit_Station_Data,
+                    L(StudentAppPermissions.EnrollRecruit_Station_Data),
+                    url: StudentAppPermissions.EnrollRecruit_Station_Data.Replace('.', '/'),
+                    icon: "flaticon-shapes",
+                    requiredPermissionName: StudentAppPermissions.EnrollRecruit_Station_Data
+                ))
+            );
+
+            //学生缴费
+            menu.AddItem(new MenuItemDefinition(
+                StudentAppPermissions.StudentPay,
+                L(StudentAppPermissions.StudentPay),
+                icon: "flaticon-interface-8"
+            ));
+
+            //学生管理
+            menu.AddItem(new MenuItemDefinition(
+                StudentAppPermissions.StudentManage,
+                L(StudentAppPermissions.StudentManage),
+                icon: "flaticon-interface-8"
+            ));
+
+
+            #endregion
         }
 
         private static ILocalizableString L(string name)

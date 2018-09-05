@@ -225,6 +225,20 @@ namespace Eblcu.Bi.Authorization.Users
             return new ResultJsonObj(granteds.Where(s => s.ParentName != null).OrderBy(p => p.DisplayName).ToList());
         }
 
+
+        [DontWrapResult]
+        public async Task<List<FlatPermissionDto>> GeCurrentUserGrantedPermissions()
+        {
+            var user = await UserManager.GetUserByIdAsync(GetCurrentUser().Id);
+            var grantedPermissions = UserManager.GetGrantedPermissionsAsync(user).Result;
+            var granteds = ObjectMapper.Map<List<FlatPermissionDto>>(grantedPermissions);
+            granteds.ForEach(s => { s.IsParent = !s.Name.Contains("."); });
+
+            return (granteds.Where(s => s.ParentName != null).OrderBy(p => p.DisplayName).ToList());
+        }
+
+
+
         [AbpAuthorize(AppPermissions.Pages_Administration_Users_ChangePermissions)]
         public async Task ResetUserSpecificPermissions(EntityDto<long> input)
         {

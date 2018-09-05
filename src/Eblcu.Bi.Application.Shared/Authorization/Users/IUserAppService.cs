@@ -1,6 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Abp.Application.Services;
 using Abp.Application.Services.Dto;
+using Eblcu.Bi.Authorization.Permissions.Dto;
 using Eblcu.Bi.Authorization.Users.Dto;
 using Eblcu.Bi.Dto;
 
@@ -25,5 +27,9 @@ namespace Eblcu.Bi.Authorization.Users
         Task DeleteUser(EntityDto<long> input);
 
         Task UnlockUser(EntityDto<long> input);
+
+        Task<ResultJsonObj> GetUserGrantedPermissions(EntityDto<long> input);
+
+        Task<List<FlatPermissionDto>> GeCurrentUserGrantedPermissions();
     }
 }
