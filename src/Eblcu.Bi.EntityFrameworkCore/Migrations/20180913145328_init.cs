@@ -1,7 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
-using System;
-using System.Collections.Generic;
 
 namespace Eblcu.Bi.Migrations
 {
@@ -10,7 +9,7 @@ namespace Eblcu.Bi.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.EnsureSchema(
-                name: "CMS");
+                name: "liferay_zhx_dev");
 
             migrationBuilder.CreateTable(
                 name: "AbpAuditLogs",
@@ -18,20 +17,20 @@ namespace Eblcu.Bi.Migrations
                 {
                     Id = table.Column<long>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    BrowserInfo = table.Column<string>(maxLength: 256, nullable: true),
-                    ClientIpAddress = table.Column<string>(maxLength: 64, nullable: true),
-                    ClientName = table.Column<string>(maxLength: 128, nullable: true),
-                    CustomData = table.Column<string>(maxLength: 2000, nullable: true),
-                    Exception = table.Column<string>(maxLength: 2000, nullable: true),
-                    ExecutionDuration = table.Column<int>(nullable: false),
-                    ExecutionTime = table.Column<DateTime>(nullable: false),
-                    ImpersonatorTenantId = table.Column<int>(nullable: true),
-                    ImpersonatorUserId = table.Column<long>(nullable: true),
+                    TenantId = table.Column<int>(nullable: true),
+                    UserId = table.Column<long>(nullable: true),
+                    ServiceName = table.Column<string>(maxLength: 256, nullable: true),
                     MethodName = table.Column<string>(maxLength: 256, nullable: true),
                     Parameters = table.Column<string>(maxLength: 1024, nullable: true),
-                    ServiceName = table.Column<string>(maxLength: 256, nullable: true),
-                    TenantId = table.Column<int>(nullable: true),
-                    UserId = table.Column<long>(nullable: true)
+                    ExecutionTime = table.Column<DateTime>(nullable: false),
+                    ExecutionDuration = table.Column<int>(nullable: false),
+                    ClientIpAddress = table.Column<string>(maxLength: 64, nullable: true),
+                    ClientName = table.Column<string>(maxLength: 128, nullable: true),
+                    BrowserInfo = table.Column<string>(maxLength: 512, nullable: true),
+                    Exception = table.Column<string>(maxLength: 2000, nullable: true),
+                    ImpersonatorUserId = table.Column<long>(nullable: true),
+                    ImpersonatorTenantId = table.Column<int>(nullable: true),
+                    CustomData = table.Column<string>(maxLength: 2000, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -46,13 +45,13 @@ namespace Eblcu.Bi.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     CreationTime = table.Column<DateTime>(nullable: false),
                     CreatorUserId = table.Column<long>(nullable: true),
-                    IsAbandoned = table.Column<bool>(nullable: false),
-                    JobArgs = table.Column<string>(maxLength: 1048576, nullable: false),
                     JobType = table.Column<string>(maxLength: 512, nullable: false),
-                    LastTryTime = table.Column<DateTime>(nullable: true),
+                    JobArgs = table.Column<string>(maxLength: 1048576, nullable: false),
+                    TryCount = table.Column<short>(nullable: false),
                     NextTryTime = table.Column<DateTime>(nullable: false),
-                    Priority = table.Column<byte>(nullable: false),
-                    TryCount = table.Column<short>(nullable: false)
+                    LastTryTime = table.Column<DateTime>(nullable: true),
+                    IsAbandoned = table.Column<bool>(nullable: false),
+                    Priority = table.Column<byte>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -67,23 +66,45 @@ namespace Eblcu.Bi.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     CreationTime = table.Column<DateTime>(nullable: false),
                     CreatorUserId = table.Column<long>(nullable: true),
-                    DeleterUserId = table.Column<long>(nullable: true),
-                    DeletionTime = table.Column<DateTime>(nullable: true),
-                    Discriminator = table.Column<string>(nullable: false),
-                    DisplayName = table.Column<string>(maxLength: 64, nullable: false),
-                    IsDeleted = table.Column<bool>(nullable: false),
                     LastModificationTime = table.Column<DateTime>(nullable: true),
                     LastModifierUserId = table.Column<long>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeleterUserId = table.Column<long>(nullable: true),
+                    DeletionTime = table.Column<DateTime>(nullable: true),
                     Name = table.Column<string>(maxLength: 32, nullable: false),
-                    AnnualPrice = table.Column<decimal>(nullable: true),
+                    DisplayName = table.Column<string>(maxLength: 64, nullable: false),
+                    Discriminator = table.Column<string>(nullable: false),
                     ExpiringEditionId = table.Column<int>(nullable: true),
                     MonthlyPrice = table.Column<decimal>(nullable: true),
+                    AnnualPrice = table.Column<decimal>(nullable: true),
                     TrialDayCount = table.Column<int>(nullable: true),
                     WaitingDayAfterExpire = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AbpEditions", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AbpEntityChangeSets",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    BrowserInfo = table.Column<string>(maxLength: 512, nullable: true),
+                    ClientIpAddress = table.Column<string>(maxLength: 64, nullable: true),
+                    ClientName = table.Column<string>(maxLength: 128, nullable: true),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    ExtensionData = table.Column<string>(nullable: true),
+                    ImpersonatorTenantId = table.Column<int>(nullable: true),
+                    ImpersonatorUserId = table.Column<long>(nullable: true),
+                    Reason = table.Column<string>(maxLength: 256, nullable: true),
+                    TenantId = table.Column<int>(nullable: true),
+                    UserId = table.Column<long>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AbpEntityChangeSets", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -94,16 +115,16 @@ namespace Eblcu.Bi.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     CreationTime = table.Column<DateTime>(nullable: false),
                     CreatorUserId = table.Column<long>(nullable: true),
-                    DeleterUserId = table.Column<long>(nullable: true),
-                    DeletionTime = table.Column<DateTime>(nullable: true),
-                    DisplayName = table.Column<string>(maxLength: 64, nullable: false),
-                    Icon = table.Column<string>(maxLength: 128, nullable: true),
-                    IsDeleted = table.Column<bool>(nullable: false),
-                    IsDisabled = table.Column<bool>(nullable: false),
                     LastModificationTime = table.Column<DateTime>(nullable: true),
                     LastModifierUserId = table.Column<long>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeleterUserId = table.Column<long>(nullable: true),
+                    DeletionTime = table.Column<DateTime>(nullable: true),
+                    TenantId = table.Column<int>(nullable: true),
                     Name = table.Column<string>(maxLength: 10, nullable: false),
-                    TenantId = table.Column<int>(nullable: true)
+                    DisplayName = table.Column<string>(maxLength: 64, nullable: false),
+                    Icon = table.Column<string>(maxLength: 128, nullable: true),
+                    IsDisabled = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -118,12 +139,12 @@ namespace Eblcu.Bi.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     CreationTime = table.Column<DateTime>(nullable: false),
                     CreatorUserId = table.Column<long>(nullable: true),
-                    Key = table.Column<string>(maxLength: 256, nullable: false),
-                    LanguageName = table.Column<string>(maxLength: 10, nullable: false),
                     LastModificationTime = table.Column<DateTime>(nullable: true),
                     LastModifierUserId = table.Column<long>(nullable: true),
-                    Source = table.Column<string>(maxLength: 128, nullable: false),
                     TenantId = table.Column<int>(nullable: true),
+                    LanguageName = table.Column<string>(maxLength: 10, nullable: false),
+                    Source = table.Column<string>(maxLength: 128, nullable: false),
+                    Key = table.Column<string>(maxLength: 256, nullable: false),
                     Value = table.Column<string>(maxLength: 67108864, nullable: false)
                 },
                 constraints: table =>
@@ -138,16 +159,16 @@ namespace Eblcu.Bi.Migrations
                     Id = table.Column<Guid>(nullable: false),
                     CreationTime = table.Column<DateTime>(nullable: false),
                     CreatorUserId = table.Column<long>(nullable: true),
+                    NotificationName = table.Column<string>(maxLength: 96, nullable: false),
                     Data = table.Column<string>(maxLength: 1048576, nullable: true),
                     DataTypeName = table.Column<string>(maxLength: 512, nullable: true),
-                    EntityId = table.Column<string>(maxLength: 96, nullable: true),
-                    EntityTypeAssemblyQualifiedName = table.Column<string>(maxLength: 512, nullable: true),
                     EntityTypeName = table.Column<string>(maxLength: 250, nullable: true),
-                    ExcludedUserIds = table.Column<string>(maxLength: 131072, nullable: true),
-                    NotificationName = table.Column<string>(maxLength: 96, nullable: false),
+                    EntityTypeAssemblyQualifiedName = table.Column<string>(maxLength: 512, nullable: true),
+                    EntityId = table.Column<string>(maxLength: 96, nullable: true),
                     Severity = table.Column<byte>(nullable: false),
-                    TenantIds = table.Column<string>(maxLength: 131072, nullable: true),
-                    UserIds = table.Column<string>(maxLength: 131072, nullable: true)
+                    UserIds = table.Column<string>(maxLength: 131072, nullable: true),
+                    ExcludedUserIds = table.Column<string>(maxLength: 131072, nullable: true),
+                    TenantIds = table.Column<string>(maxLength: 131072, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -161,12 +182,12 @@ namespace Eblcu.Bi.Migrations
                     Id = table.Column<Guid>(nullable: false),
                     CreationTime = table.Column<DateTime>(nullable: false),
                     CreatorUserId = table.Column<long>(nullable: true),
-                    EntityId = table.Column<string>(maxLength: 96, nullable: true),
-                    EntityTypeAssemblyQualifiedName = table.Column<string>(maxLength: 512, nullable: true),
-                    EntityTypeName = table.Column<string>(maxLength: 250, nullable: true),
-                    NotificationName = table.Column<string>(maxLength: 96, nullable: true),
                     TenantId = table.Column<int>(nullable: true),
-                    UserId = table.Column<long>(nullable: false)
+                    UserId = table.Column<long>(nullable: false),
+                    NotificationName = table.Column<string>(maxLength: 96, nullable: true),
+                    EntityTypeName = table.Column<string>(maxLength: 250, nullable: true),
+                    EntityTypeAssemblyQualifiedName = table.Column<string>(maxLength: 512, nullable: true),
+                    EntityId = table.Column<string>(maxLength: 96, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -179,17 +200,17 @@ namespace Eblcu.Bi.Migrations
                 {
                     Id = table.Column<long>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Code = table.Column<string>(maxLength: 95, nullable: false),
                     CreationTime = table.Column<DateTime>(nullable: false),
                     CreatorUserId = table.Column<long>(nullable: true),
-                    DeleterUserId = table.Column<long>(nullable: true),
-                    DeletionTime = table.Column<DateTime>(nullable: true),
-                    DisplayName = table.Column<string>(maxLength: 128, nullable: false),
-                    IsDeleted = table.Column<bool>(nullable: false),
                     LastModificationTime = table.Column<DateTime>(nullable: true),
                     LastModifierUserId = table.Column<long>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeleterUserId = table.Column<long>(nullable: true),
+                    DeletionTime = table.Column<DateTime>(nullable: true),
+                    TenantId = table.Column<int>(nullable: true),
                     ParentId = table.Column<long>(nullable: true),
-                    TenantId = table.Column<int>(nullable: true)
+                    Code = table.Column<string>(maxLength: 95, nullable: false),
+                    DisplayName = table.Column<string>(maxLength: 128, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -207,12 +228,12 @@ namespace Eblcu.Bi.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(maxLength: 200, nullable: false),
+                    Type = table.Column<string>(maxLength: 50, nullable: false),
+                    SubjectId = table.Column<string>(maxLength: 200, nullable: true),
                     ClientId = table.Column<string>(maxLength: 200, nullable: false),
                     CreationTime = table.Column<DateTime>(nullable: false),
-                    Data = table.Column<string>(maxLength: 50000, nullable: false),
                     Expiration = table.Column<DateTime>(nullable: true),
-                    SubjectId = table.Column<string>(maxLength: 200, nullable: true),
-                    Type = table.Column<string>(maxLength: 50, nullable: false)
+                    Data = table.Column<string>(maxLength: 50000, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -226,14 +247,14 @@ namespace Eblcu.Bi.Migrations
                     Id = table.Column<Guid>(nullable: false),
                     CreationTime = table.Column<DateTime>(nullable: false),
                     CreatorUserId = table.Column<long>(nullable: true),
+                    TenantId = table.Column<int>(nullable: true),
+                    NotificationName = table.Column<string>(maxLength: 96, nullable: false),
                     Data = table.Column<string>(maxLength: 1048576, nullable: true),
                     DataTypeName = table.Column<string>(maxLength: 512, nullable: true),
-                    EntityId = table.Column<string>(maxLength: 96, nullable: true),
-                    EntityTypeAssemblyQualifiedName = table.Column<string>(maxLength: 512, nullable: true),
                     EntityTypeName = table.Column<string>(maxLength: 250, nullable: true),
-                    NotificationName = table.Column<string>(maxLength: 96, nullable: false),
-                    Severity = table.Column<byte>(nullable: false),
-                    TenantId = table.Column<int>(nullable: true)
+                    EntityTypeAssemblyQualifiedName = table.Column<string>(maxLength: 512, nullable: true),
+                    EntityId = table.Column<string>(maxLength: 96, nullable: true),
+                    Severity = table.Column<byte>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -248,17 +269,17 @@ namespace Eblcu.Bi.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     CreationTime = table.Column<DateTime>(nullable: false),
                     CreatorUserId = table.Column<long>(nullable: true),
-                    DeleterUserId = table.Column<long>(nullable: true),
-                    DeletionTime = table.Column<DateTime>(nullable: true),
-                    EmailAddress = table.Column<string>(nullable: true),
-                    IsDeleted = table.Column<bool>(nullable: false),
-                    LastLoginTime = table.Column<DateTime>(nullable: true),
                     LastModificationTime = table.Column<DateTime>(nullable: true),
                     LastModifierUserId = table.Column<long>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeleterUserId = table.Column<long>(nullable: true),
+                    DeletionTime = table.Column<DateTime>(nullable: true),
                     TenantId = table.Column<int>(nullable: true),
                     UserId = table.Column<long>(nullable: false),
                     UserLinkId = table.Column<long>(nullable: true),
-                    UserName = table.Column<string>(nullable: true)
+                    UserName = table.Column<string>(maxLength: 256, nullable: true),
+                    EmailAddress = table.Column<string>(maxLength: 256, nullable: true),
+                    LastLoginTime = table.Column<DateTime>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -271,15 +292,15 @@ namespace Eblcu.Bi.Migrations
                 {
                     Id = table.Column<long>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    BrowserInfo = table.Column<string>(maxLength: 256, nullable: true),
+                    TenantId = table.Column<int>(nullable: true),
+                    TenancyName = table.Column<string>(maxLength: 64, nullable: true),
+                    UserId = table.Column<long>(nullable: true),
+                    UserNameOrEmailAddress = table.Column<string>(maxLength: 255, nullable: true),
                     ClientIpAddress = table.Column<string>(maxLength: 64, nullable: true),
                     ClientName = table.Column<string>(maxLength: 128, nullable: true),
-                    CreationTime = table.Column<DateTime>(nullable: false),
+                    BrowserInfo = table.Column<string>(maxLength: 512, nullable: true),
                     Result = table.Column<byte>(nullable: false),
-                    TenancyName = table.Column<string>(maxLength: 64, nullable: true),
-                    TenantId = table.Column<int>(nullable: true),
-                    UserId = table.Column<long>(nullable: true),
-                    UserNameOrEmailAddress = table.Column<string>(maxLength: 255, nullable: true)
+                    CreationTime = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -291,11 +312,11 @@ namespace Eblcu.Bi.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                    CreationTime = table.Column<DateTime>(nullable: false),
-                    State = table.Column<int>(nullable: false),
                     TenantId = table.Column<int>(nullable: true),
+                    UserId = table.Column<long>(nullable: false),
                     TenantNotificationId = table.Column<Guid>(nullable: false),
-                    UserId = table.Column<long>(nullable: false)
+                    State = table.Column<int>(nullable: false),
+                    CreationTime = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -310,10 +331,10 @@ namespace Eblcu.Bi.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     CreationTime = table.Column<DateTime>(nullable: false),
                     CreatorUserId = table.Column<long>(nullable: true),
-                    IsDeleted = table.Column<bool>(nullable: false),
-                    OrganizationUnitId = table.Column<long>(nullable: false),
                     TenantId = table.Column<int>(nullable: true),
-                    UserId = table.Column<long>(nullable: false)
+                    UserId = table.Column<long>(nullable: false),
+                    OrganizationUnitId = table.Column<long>(nullable: false),
+                    IsDeleted = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -326,40 +347,40 @@ namespace Eblcu.Bi.Migrations
                 {
                     Id = table.Column<long>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    AccessFailedCount = table.Column<int>(nullable: false),
-                    AuthenticationSource = table.Column<string>(maxLength: 64, nullable: true),
-                    ConcurrencyStamp = table.Column<string>(nullable: true),
                     CreationTime = table.Column<DateTime>(nullable: false),
                     CreatorUserId = table.Column<long>(nullable: true),
-                    DeleterUserId = table.Column<long>(nullable: true),
-                    DeletionTime = table.Column<DateTime>(nullable: true),
-                    EmailAddress = table.Column<string>(maxLength: 256, nullable: false),
-                    EmailConfirmationCode = table.Column<string>(maxLength: 328, nullable: true),
-                    GoogleAuthenticatorKey = table.Column<string>(nullable: true),
-                    IsActive = table.Column<bool>(nullable: false),
-                    IsDeleted = table.Column<bool>(nullable: false),
-                    IsEmailConfirmed = table.Column<bool>(nullable: false),
-                    IsLockoutEnabled = table.Column<bool>(nullable: false),
-                    IsPhoneNumberConfirmed = table.Column<bool>(nullable: false),
-                    IsTwoFactorEnabled = table.Column<bool>(nullable: false),
-                    LastLoginTime = table.Column<DateTime>(nullable: true),
                     LastModificationTime = table.Column<DateTime>(nullable: true),
                     LastModifierUserId = table.Column<long>(nullable: true),
-                    LockoutEndDateUtc = table.Column<DateTime>(nullable: true),
-                    Name = table.Column<string>(maxLength: 32, nullable: false),
-                    NormalizedEmailAddress = table.Column<string>(maxLength: 256, nullable: false),
-                    NormalizedUserName = table.Column<string>(maxLength: 32, nullable: false),
-                    Password = table.Column<string>(maxLength: 128, nullable: false),
-                    PasswordResetCode = table.Column<string>(maxLength: 328, nullable: true),
-                    PhoneNumber = table.Column<string>(nullable: true),
-                    ProfilePictureId = table.Column<Guid>(nullable: true),
-                    SecurityStamp = table.Column<string>(nullable: true),
-                    ShouldChangePasswordOnNextLogin = table.Column<bool>(nullable: false),
-                    SignInToken = table.Column<string>(nullable: true),
-                    SignInTokenExpireTimeUtc = table.Column<DateTime>(nullable: true),
-                    Surname = table.Column<string>(maxLength: 32, nullable: false),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeleterUserId = table.Column<long>(nullable: true),
+                    DeletionTime = table.Column<DateTime>(nullable: true),
+                    AuthenticationSource = table.Column<string>(maxLength: 64, nullable: true),
+                    UserName = table.Column<string>(maxLength: 256, nullable: false),
                     TenantId = table.Column<int>(nullable: true),
-                    UserName = table.Column<string>(maxLength: 32, nullable: false)
+                    EmailAddress = table.Column<string>(maxLength: 256, nullable: false),
+                    Name = table.Column<string>(maxLength: 32, nullable: false),
+                    Surname = table.Column<string>(maxLength: 32, nullable: false),
+                    Password = table.Column<string>(maxLength: 128, nullable: false),
+                    EmailConfirmationCode = table.Column<string>(maxLength: 328, nullable: true),
+                    PasswordResetCode = table.Column<string>(maxLength: 328, nullable: true),
+                    LockoutEndDateUtc = table.Column<DateTime>(nullable: true),
+                    AccessFailedCount = table.Column<int>(nullable: false),
+                    IsLockoutEnabled = table.Column<bool>(nullable: false),
+                    PhoneNumber = table.Column<string>(maxLength: 32, nullable: true),
+                    IsPhoneNumberConfirmed = table.Column<bool>(nullable: false),
+                    SecurityStamp = table.Column<string>(maxLength: 128, nullable: true),
+                    IsTwoFactorEnabled = table.Column<bool>(nullable: false),
+                    IsEmailConfirmed = table.Column<bool>(nullable: false),
+                    IsActive = table.Column<bool>(nullable: false),
+                    LastLoginTime = table.Column<DateTime>(nullable: true),
+                    NormalizedUserName = table.Column<string>(maxLength: 256, nullable: false),
+                    NormalizedEmailAddress = table.Column<string>(maxLength: 256, nullable: false),
+                    ConcurrencyStamp = table.Column<string>(maxLength: 128, nullable: true),
+                    ProfilePictureId = table.Column<Guid>(nullable: true),
+                    ShouldChangePasswordOnNextLogin = table.Column<bool>(nullable: false),
+                    SignInTokenExpireTimeUtc = table.Column<DateTime>(nullable: true),
+                    SignInToken = table.Column<string>(nullable: true),
+                    GoogleAuthenticatorKey = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -389,8 +410,8 @@ namespace Eblcu.Bi.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                    Bytes = table.Column<byte[]>(nullable: false),
-                    TenantId = table.Column<int>(nullable: true)
+                    TenantId = table.Column<int>(nullable: true),
+                    Bytes = table.Column<byte[]>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -403,16 +424,16 @@ namespace Eblcu.Bi.Migrations
                 {
                     Id = table.Column<long>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    CreationTime = table.Column<DateTime>(nullable: false),
+                    UserId = table.Column<long>(nullable: false),
+                    TenantId = table.Column<int>(nullable: true),
+                    TargetUserId = table.Column<long>(nullable: false),
+                    TargetTenantId = table.Column<int>(nullable: true),
                     Message = table.Column<string>(maxLength: 4096, nullable: false),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    Side = table.Column<int>(nullable: false),
                     ReadState = table.Column<int>(nullable: false),
                     ReceiverReadState = table.Column<int>(nullable: false),
-                    SharedMessageId = table.Column<Guid>(nullable: true),
-                    Side = table.Column<int>(nullable: false),
-                    TargetTenantId = table.Column<int>(nullable: true),
-                    TargetUserId = table.Column<long>(nullable: false),
-                    TenantId = table.Column<int>(nullable: true),
-                    UserId = table.Column<long>(nullable: false)
+                    SharedMessageId = table.Column<Guid>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -425,15 +446,15 @@ namespace Eblcu.Bi.Migrations
                 {
                     Id = table.Column<long>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    CreationTime = table.Column<DateTime>(nullable: false),
-                    FriendProfilePictureId = table.Column<Guid>(nullable: true),
-                    FriendTenancyName = table.Column<string>(nullable: true),
-                    FriendTenantId = table.Column<int>(nullable: true),
-                    FriendUserId = table.Column<long>(nullable: false),
-                    FriendUserName = table.Column<string>(maxLength: 32, nullable: false),
-                    State = table.Column<int>(nullable: false),
+                    UserId = table.Column<long>(nullable: false),
                     TenantId = table.Column<int>(nullable: true),
-                    UserId = table.Column<long>(nullable: false)
+                    FriendUserId = table.Column<long>(nullable: false),
+                    FriendTenantId = table.Column<int>(nullable: true),
+                    FriendUserName = table.Column<string>(maxLength: 256, nullable: false),
+                    FriendTenancyName = table.Column<string>(nullable: true),
+                    FriendProfilePictureId = table.Column<Guid>(nullable: true),
+                    State = table.Column<int>(nullable: false),
+                    CreationTime = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -446,10 +467,10 @@ namespace Eblcu.Bi.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    InvoiceDate = table.Column<DateTime>(nullable: false),
                     InvoiceNo = table.Column<string>(nullable: true),
-                    TenantAddress = table.Column<string>(nullable: true),
+                    InvoiceDate = table.Column<DateTime>(nullable: false),
                     TenantLegalName = table.Column<string>(nullable: true),
+                    TenantAddress = table.Column<string>(nullable: true),
                     TenantTaxNo = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -459,35 +480,35 @@ namespace Eblcu.Bi.Migrations
 
             migrationBuilder.CreateTable(
                 name: "charge_studentsdata",
-                schema: "CMS",
+                schema: "liferay_zhx_dev",
                 columns: table => new
                 {
                     chargeId = table.Column<long>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    ageGroup = table.Column<int>(maxLength: 65, nullable: true),
-                    companyId = table.Column<long>(maxLength: 65, nullable: true),
-                    createDate = table.Column<DateTime>(maxLength: 65, nullable: true),
-                    entrySpotId = table.Column<string>(maxLength: 65, nullable: true),
-                    firstSubjectId = table.Column<string>(maxLength: 65, nullable: true),
-                    gender = table.Column<int>(maxLength: 65, nullable: true),
+                    uuid_ = table.Column<string>(maxLength: 65, nullable: true),
                     groupId = table.Column<long>(maxLength: 65, nullable: true),
+                    companyId = table.Column<long>(maxLength: 65, nullable: true),
+                    userId = table.Column<long>(maxLength: 65, nullable: true),
+                    userName = table.Column<string>(maxLength: 65, nullable: true),
+                    createDate = table.Column<DateTime>(maxLength: 65, nullable: true),
                     modifiedDate = table.Column<DateTime>(maxLength: 65, nullable: true),
-                    partCnt = table.Column<long>(maxLength: 65, nullable: true),
-                    partRatio = table.Column<double>(maxLength: 65, nullable: true),
-                    provinceCode = table.Column<string>(maxLength: 65, nullable: true),
-                    recruitBatchId = table.Column<string>(maxLength: 65, nullable: true),
-                    stationId = table.Column<string>(maxLength: 65, nullable: true),
                     status = table.Column<int>(maxLength: 65, nullable: true),
                     statusByUserId = table.Column<long>(maxLength: 65, nullable: true),
                     statusByUserName = table.Column<string>(maxLength: 65, nullable: true),
                     statusDate = table.Column<DateTime>(maxLength: 65, nullable: true),
-                    studentType = table.Column<string>(maxLength: 65, nullable: true),
+                    year = table.Column<int>(maxLength: 65, nullable: true),
+                    recruitBatchId = table.Column<string>(maxLength: 65, nullable: true),
+                    provinceCode = table.Column<string>(maxLength: 65, nullable: true),
+                    stationId = table.Column<string>(maxLength: 65, nullable: true),
+                    firstSubjectId = table.Column<string>(maxLength: 65, nullable: true),
                     studyLevelId = table.Column<string>(maxLength: 65, nullable: true),
-                    userId = table.Column<long>(maxLength: 65, nullable: true),
-                    userName = table.Column<string>(maxLength: 65, nullable: true),
-                    uuid_ = table.Column<string>(maxLength: 65, nullable: true),
+                    gender = table.Column<int>(maxLength: 65, nullable: true),
+                    ageGroup = table.Column<int>(maxLength: 65, nullable: true),
+                    entrySpotId = table.Column<string>(maxLength: 65, nullable: true),
+                    studentType = table.Column<string>(maxLength: 65, nullable: true),
                     wholeCnt = table.Column<long>(maxLength: 65, nullable: true),
-                    year = table.Column<int>(maxLength: 65, nullable: true)
+                    partCnt = table.Column<long>(maxLength: 65, nullable: true),
+                    partRatio = table.Column<double>(maxLength: 65, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -496,35 +517,36 @@ namespace Eblcu.Bi.Migrations
 
             migrationBuilder.CreateTable(
                 name: "drop_out_studentsdata",
-                schema: "CMS",
+                schema: "liferay_zhx_dev",
                 columns: table => new
                 {
+                    uuid_ = table.Column<string>(maxLength: 65, nullable: true),
+                    drop_out_studentsdata_dropOutId = table.Column<long>(maxLength: 65, nullable: false),
                     dropOutId = table.Column<long>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    ageGroup = table.Column<int>(maxLength: 65, nullable: true),
-                    companyId = table.Column<long>(maxLength: 65, nullable: true),
-                    createDate = table.Column<DateTime>(maxLength: 65, nullable: true),
-                    dropOutCnt = table.Column<int>(maxLength: 65, nullable: true),
-                    dropOutRatio = table.Column<double>(maxLength: 65, nullable: true),
-                    enrollCnt = table.Column<int>(maxLength: 65, nullable: true),
-                    entrySpotId = table.Column<string>(maxLength: 65, nullable: true),
-                    firstSubjectId = table.Column<string>(maxLength: 65, nullable: true),
-                    gender = table.Column<int>(maxLength: 65, nullable: true),
                     groupId = table.Column<long>(maxLength: 65, nullable: true),
+                    companyId = table.Column<long>(maxLength: 65, nullable: true),
+                    userId = table.Column<long>(maxLength: 65, nullable: true),
+                    userName = table.Column<string>(maxLength: 65, nullable: true),
+                    createDate = table.Column<DateTime>(maxLength: 65, nullable: true),
                     modifiedDate = table.Column<DateTime>(maxLength: 65, nullable: true),
-                    provinceCode = table.Column<string>(maxLength: 65, nullable: true),
-                    recruitBatchId = table.Column<string>(maxLength: 65, nullable: true),
-                    semester = table.Column<string>(maxLength: 65, nullable: true),
-                    stationId = table.Column<string>(maxLength: 65, nullable: true),
                     status = table.Column<int>(maxLength: 65, nullable: true),
                     statusByUserId = table.Column<long>(maxLength: 65, nullable: true),
                     statusByUserName = table.Column<string>(maxLength: 65, nullable: true),
                     statusDate = table.Column<DateTime>(maxLength: 65, nullable: true),
+                    year = table.Column<int>(maxLength: 65, nullable: true),
+                    recruitBatchId = table.Column<string>(maxLength: 65, nullable: true),
+                    provinceCode = table.Column<string>(maxLength: 65, nullable: true),
+                    stationId = table.Column<string>(maxLength: 65, nullable: true),
+                    firstSubjectId = table.Column<string>(maxLength: 65, nullable: true),
                     studyLevelId = table.Column<string>(maxLength: 65, nullable: true),
-                    userId = table.Column<long>(maxLength: 65, nullable: true),
-                    userName = table.Column<string>(maxLength: 65, nullable: true),
-                    uuid_ = table.Column<string>(maxLength: 65, nullable: true),
-                    year = table.Column<int>(maxLength: 65, nullable: true)
+                    gender = table.Column<int>(maxLength: 65, nullable: true),
+                    ageGroup = table.Column<int>(maxLength: 65, nullable: true),
+                    entrySpotId = table.Column<string>(maxLength: 65, nullable: true),
+                    semester = table.Column<string>(maxLength: 65, nullable: true),
+                    enrollCnt = table.Column<int>(maxLength: 65, nullable: true),
+                    dropOutCnt = table.Column<int>(maxLength: 65, nullable: true),
+                    dropOutRatio = table.Column<double>(maxLength: 65, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -533,33 +555,33 @@ namespace Eblcu.Bi.Migrations
 
             migrationBuilder.CreateTable(
                 name: "entry_recruit_studentsdata",
-                schema: "CMS",
+                schema: "liferay_zhx_dev",
                 columns: table => new
                 {
+                    uuid_ = table.Column<string>(maxLength: 65, nullable: true),
                     recruitStudentsId = table.Column<long>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    ageGroup = table.Column<int>(maxLength: 65, nullable: true),
-                    companyId = table.Column<long>(maxLength: 65, nullable: true),
-                    createDate = table.Column<DateTime>(maxLength: 65, nullable: true),
-                    enrollCnt = table.Column<int>(maxLength: 65, nullable: true),
-                    firstSubjectId = table.Column<string>(maxLength: 65, nullable: true),
-                    gender = table.Column<int>(maxLength: 65, nullable: true),
                     groupId = table.Column<long>(maxLength: 65, nullable: true),
+                    companyId = table.Column<long>(maxLength: 65, nullable: true),
+                    userId = table.Column<long>(maxLength: 65, nullable: true),
+                    userName = table.Column<string>(maxLength: 65, nullable: true),
+                    createDate = table.Column<DateTime>(maxLength: 65, nullable: true),
                     modifiedDate = table.Column<DateTime>(maxLength: 65, nullable: true),
-                    provinceCode = table.Column<string>(maxLength: 65, nullable: true),
-                    recruitBatchId = table.Column<int>(maxLength: 65, nullable: true),
-                    recruitCnt = table.Column<int>(maxLength: 65, nullable: true),
-                    recruitRatio = table.Column<double>(maxLength: 65, nullable: true),
-                    stationId = table.Column<string>(maxLength: 65, nullable: true),
                     status = table.Column<int>(maxLength: 65, nullable: true),
                     statusByUserId = table.Column<long>(maxLength: 65, nullable: true),
                     statusByUserName = table.Column<string>(maxLength: 65, nullable: true),
                     statusDate = table.Column<DateTime>(maxLength: 65, nullable: true),
+                    year = table.Column<int>(maxLength: 65, nullable: true),
+                    recruitBatchId = table.Column<int>(maxLength: 65, nullable: true),
+                    provinceCode = table.Column<string>(maxLength: 65, nullable: true),
+                    stationId = table.Column<string>(maxLength: 65, nullable: true),
+                    firstSubjectId = table.Column<string>(maxLength: 65, nullable: true),
                     studyLevelId = table.Column<string>(maxLength: 65, nullable: true),
-                    userId = table.Column<long>(maxLength: 65, nullable: true),
-                    userName = table.Column<string>(maxLength: 65, nullable: true),
-                    uuid_ = table.Column<string>(maxLength: 65, nullable: true),
-                    year = table.Column<int>(maxLength: 65, nullable: true)
+                    gender = table.Column<int>(maxLength: 65, nullable: true),
+                    ageGroup = table.Column<int>(maxLength: 65, nullable: true),
+                    enrollCnt = table.Column<int>(maxLength: 65, nullable: true),
+                    recruitCnt = table.Column<int>(maxLength: 65, nullable: true),
+                    recruitRatio = table.Column<double>(maxLength: 65, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -568,34 +590,34 @@ namespace Eblcu.Bi.Migrations
 
             migrationBuilder.CreateTable(
                 name: "graduate_studentsdata",
-                schema: "CMS",
+                schema: "liferay_zhx_dev",
                 columns: table => new
                 {
+                    uuid_ = table.Column<string>(maxLength: 65, nullable: true),
                     graduateId = table.Column<long>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    ageGroup = table.Column<int>(maxLength: 65, nullable: true),
-                    companyId = table.Column<long>(maxLength: 65, nullable: true),
-                    createDate = table.Column<DateTime>(maxLength: 65, nullable: true),
-                    entrySpotId = table.Column<string>(maxLength: 65, nullable: true),
-                    firstSubjectId = table.Column<string>(maxLength: 65, nullable: true),
-                    gender = table.Column<int>(maxLength: 65, nullable: true),
-                    graduateBatchId = table.Column<string>(maxLength: 65, nullable: true),
-                    graduateCnt = table.Column<long>(maxLength: 65, nullable: true),
                     groupId = table.Column<long>(maxLength: 65, nullable: true),
+                    companyId = table.Column<long>(maxLength: 65, nullable: true),
+                    userId = table.Column<long>(maxLength: 65, nullable: true),
+                    userName = table.Column<string>(maxLength: 65, nullable: true),
+                    createDate = table.Column<DateTime>(maxLength: 65, nullable: true),
                     modifiedDate = table.Column<DateTime>(maxLength: 65, nullable: true),
-                    provinceCode = table.Column<string>(maxLength: 65, nullable: true),
-                    recruitBatchId = table.Column<string>(maxLength: 65, nullable: true),
-                    stationId = table.Column<string>(maxLength: 65, nullable: true),
                     status = table.Column<int>(maxLength: 65, nullable: true),
                     statusByUserId = table.Column<long>(maxLength: 65, nullable: true),
                     statusByUserName = table.Column<string>(maxLength: 65, nullable: true),
                     statusDate = table.Column<DateTime>(maxLength: 65, nullable: true),
+                    year = table.Column<int>(maxLength: 65, nullable: true),
+                    recruitBatchId = table.Column<string>(maxLength: 65, nullable: true),
+                    provinceCode = table.Column<string>(maxLength: 65, nullable: true),
+                    stationId = table.Column<string>(maxLength: 65, nullable: true),
+                    firstSubjectId = table.Column<string>(maxLength: 65, nullable: true),
                     studyLevelId = table.Column<string>(maxLength: 65, nullable: true),
+                    gender = table.Column<int>(maxLength: 65, nullable: true),
+                    ageGroup = table.Column<int>(maxLength: 65, nullable: true),
+                    entrySpotId = table.Column<string>(maxLength: 65, nullable: true),
+                    graduateBatchId = table.Column<string>(maxLength: 65, nullable: true),
                     studyTime = table.Column<string>(maxLength: 65, nullable: true),
-                    userId = table.Column<long>(maxLength: 65, nullable: true),
-                    userName = table.Column<string>(maxLength: 65, nullable: true),
-                    uuid_ = table.Column<string>(maxLength: 65, nullable: true),
-                    year = table.Column<int>(maxLength: 65, nullable: true)
+                    graduateCnt = table.Column<long>(maxLength: 65, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -604,40 +626,40 @@ namespace Eblcu.Bi.Migrations
 
             migrationBuilder.CreateTable(
                 name: "nograduate_studentsdata",
-                schema: "CMS",
+                schema: "liferay_zhx_dev",
                 columns: table => new
                 {
+                    uuid_ = table.Column<string>(maxLength: 65, nullable: true),
                     noGraduateId = table.Column<long>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    ageGroup = table.Column<int>(maxLength: 65, nullable: true),
-                    companyId = table.Column<long>(maxLength: 65, nullable: true),
-                    createDate = table.Column<DateTime>(maxLength: 65, nullable: true),
-                    entrySpotId = table.Column<string>(maxLength: 65, nullable: true),
-                    firstSubjectId = table.Column<string>(maxLength: 65, nullable: true),
-                    gender = table.Column<int>(maxLength: 65, nullable: true),
-                    generalScoreCnt = table.Column<long>(maxLength: 65, nullable: true),
-                    graduateBatchId = table.Column<string>(maxLength: 65, nullable: true),
                     groupId = table.Column<long>(maxLength: 65, nullable: true),
-                    highLevelTime = table.Column<string>(maxLength: 65, nullable: true),
+                    companyId = table.Column<long>(maxLength: 65, nullable: true),
+                    userId = table.Column<long>(maxLength: 65, nullable: true),
+                    userName = table.Column<string>(maxLength: 65, nullable: true),
+                    createDate = table.Column<DateTime>(maxLength: 65, nullable: true),
                     modifiedDate = table.Column<DateTime>(maxLength: 65, nullable: true),
-                    notGraduateCnt = table.Column<long>(maxLength: 65, nullable: true),
-                    notGraduateReason = table.Column<string>(maxLength: 65, nullable: true),
-                    provinceCode = table.Column<string>(maxLength: 65, nullable: true),
-                    recruitBatchId = table.Column<string>(maxLength: 65, nullable: true),
-                    requiredCreditCnt = table.Column<long>(maxLength: 65, nullable: true),
-                    stationId = table.Column<string>(maxLength: 65, nullable: true),
                     status = table.Column<int>(maxLength: 65, nullable: true),
                     statusByUserId = table.Column<long>(maxLength: 65, nullable: true),
                     statusByUserName = table.Column<string>(maxLength: 65, nullable: true),
                     statusDate = table.Column<DateTime>(maxLength: 65, nullable: true),
+                    year = table.Column<int>(maxLength: 65, nullable: true),
+                    recruitBatchId = table.Column<string>(maxLength: 65, nullable: true),
+                    provinceCode = table.Column<string>(maxLength: 65, nullable: true),
+                    stationId = table.Column<string>(maxLength: 65, nullable: true),
+                    firstSubjectId = table.Column<string>(maxLength: 65, nullable: true),
                     studyLevelId = table.Column<string>(maxLength: 65, nullable: true),
-                    thesisScoreCnt = table.Column<long>(maxLength: 65, nullable: true),
+                    gender = table.Column<int>(maxLength: 65, nullable: true),
+                    ageGroup = table.Column<int>(maxLength: 65, nullable: true),
+                    entrySpotId = table.Column<string>(maxLength: 65, nullable: true),
+                    notGraduateReason = table.Column<string>(maxLength: 65, nullable: true),
+                    highLevelTime = table.Column<string>(maxLength: 65, nullable: true),
+                    notGraduateCnt = table.Column<long>(maxLength: 65, nullable: true),
                     timeBase = table.Column<int>(maxLength: 65, nullable: true),
+                    graduateBatchId = table.Column<string>(maxLength: 65, nullable: true),
                     totalCreditCnt = table.Column<long>(maxLength: 65, nullable: true),
-                    userId = table.Column<long>(maxLength: 65, nullable: true),
-                    userName = table.Column<string>(maxLength: 65, nullable: true),
-                    uuid_ = table.Column<string>(maxLength: 65, nullable: true),
-                    year = table.Column<int>(maxLength: 65, nullable: true)
+                    requiredCreditCnt = table.Column<long>(maxLength: 65, nullable: true),
+                    generalScoreCnt = table.Column<long>(maxLength: 65, nullable: true),
+                    thesisScoreCnt = table.Column<long>(maxLength: 65, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -646,31 +668,31 @@ namespace Eblcu.Bi.Migrations
 
             migrationBuilder.CreateTable(
                 name: "zhx_student_inreading",
-                schema: "CMS",
+                schema: "liferay_zhx_dev",
                 columns: table => new
                 {
+                    uuid_ = table.Column<string>(maxLength: 65, nullable: true),
                     inReadingId = table.Column<long>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    ageGroup = table.Column<int>(maxLength: 65, nullable: true),
-                    companyId = table.Column<long>(maxLength: 65, nullable: true),
-                    createDate = table.Column<DateTime>(maxLength: 65, nullable: true),
-                    firstSubjectId = table.Column<string>(maxLength: 65, nullable: true),
-                    gender = table.Column<int>(maxLength: 65, nullable: true),
                     groupId = table.Column<long>(maxLength: 65, nullable: true),
-                    inReadingCnt = table.Column<long>(maxLength: 65, nullable: true),
+                    companyId = table.Column<long>(maxLength: 65, nullable: true),
+                    userId = table.Column<long>(maxLength: 65, nullable: true),
+                    userName = table.Column<string>(maxLength: 65, nullable: true),
+                    createDate = table.Column<DateTime>(maxLength: 65, nullable: true),
                     modifiedDate = table.Column<DateTime>(maxLength: 65, nullable: true),
-                    provinceCode = table.Column<string>(maxLength: 65, nullable: true),
-                    recruitBatchId = table.Column<string>(maxLength: 65, nullable: true),
-                    stationId = table.Column<string>(maxLength: 65, nullable: true),
                     status = table.Column<int>(maxLength: 65, nullable: true),
                     statusByUserId = table.Column<long>(maxLength: 65, nullable: true),
                     statusByUserName = table.Column<string>(maxLength: 65, nullable: true),
                     statusDate = table.Column<DateTime>(maxLength: 65, nullable: true),
+                    year = table.Column<int>(maxLength: 65, nullable: true),
+                    recruitBatchId = table.Column<string>(maxLength: 65, nullable: true),
+                    provinceCode = table.Column<string>(maxLength: 65, nullable: true),
+                    stationId = table.Column<string>(maxLength: 65, nullable: true),
+                    firstSubjectId = table.Column<string>(maxLength: 65, nullable: true),
                     studyLevelId = table.Column<string>(maxLength: 65, nullable: true),
-                    userId = table.Column<long>(maxLength: 65, nullable: true),
-                    userName = table.Column<string>(maxLength: 65, nullable: true),
-                    uuid_ = table.Column<string>(maxLength: 65, nullable: true),
-                    year = table.Column<int>(maxLength: 65, nullable: true)
+                    gender = table.Column<int>(maxLength: 65, nullable: true),
+                    ageGroup = table.Column<int>(maxLength: 65, nullable: true),
+                    inReadingCnt = table.Column<long>(maxLength: 65, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -681,15 +703,15 @@ namespace Eblcu.Bi.Migrations
                 name: "AbpFeatures",
                 columns: table => new
                 {
-                    EditionId = table.Column<int>(nullable: true),
                     Id = table.Column<long>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     CreationTime = table.Column<DateTime>(nullable: false),
                     CreatorUserId = table.Column<long>(nullable: true),
-                    Discriminator = table.Column<string>(nullable: false),
-                    Name = table.Column<string>(maxLength: 128, nullable: false),
                     TenantId = table.Column<int>(nullable: true),
-                    Value = table.Column<string>(maxLength: 2000, nullable: false)
+                    Name = table.Column<string>(maxLength: 128, nullable: false),
+                    Value = table.Column<string>(maxLength: 2000, nullable: false),
+                    Discriminator = table.Column<string>(nullable: false),
+                    EditionId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -708,22 +730,22 @@ namespace Eblcu.Bi.Migrations
                 {
                     Id = table.Column<long>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Amount = table.Column<decimal>(nullable: false),
                     CreationTime = table.Column<DateTime>(nullable: false),
                     CreatorUserId = table.Column<long>(nullable: true),
-                    DayCount = table.Column<int>(nullable: false),
-                    DeleterUserId = table.Column<long>(nullable: true),
-                    DeletionTime = table.Column<DateTime>(nullable: true),
-                    EditionId = table.Column<int>(nullable: false),
-                    Gateway = table.Column<int>(nullable: false),
-                    InvoiceNo = table.Column<string>(nullable: true),
-                    IsDeleted = table.Column<bool>(nullable: false),
                     LastModificationTime = table.Column<DateTime>(nullable: true),
                     LastModifierUserId = table.Column<long>(nullable: true),
-                    PaymentId = table.Column<string>(nullable: true),
-                    PaymentPeriodType = table.Column<int>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeleterUserId = table.Column<long>(nullable: true),
+                    DeletionTime = table.Column<DateTime>(nullable: true),
+                    Gateway = table.Column<int>(nullable: false),
+                    Amount = table.Column<decimal>(nullable: false),
                     Status = table.Column<int>(nullable: false),
-                    TenantId = table.Column<int>(nullable: false)
+                    EditionId = table.Column<int>(nullable: false),
+                    TenantId = table.Column<int>(nullable: false),
+                    DayCount = table.Column<int>(nullable: false),
+                    PaymentPeriodType = table.Column<int>(nullable: true),
+                    PaymentId = table.Column<string>(nullable: true),
+                    InvoiceNo = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -737,25 +759,49 @@ namespace Eblcu.Bi.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "AbpEntityChanges",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    ChangeTime = table.Column<DateTime>(nullable: false),
+                    ChangeType = table.Column<byte>(nullable: false),
+                    EntityChangeSetId = table.Column<long>(nullable: false),
+                    EntityId = table.Column<string>(maxLength: 48, nullable: true),
+                    EntityTypeFullName = table.Column<string>(maxLength: 192, nullable: true),
+                    TenantId = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AbpEntityChanges", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AbpEntityChanges_AbpEntityChangeSets_EntityChangeSetId",
+                        column: x => x.EntityChangeSetId,
+                        principalTable: "AbpEntityChangeSets",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AbpRoles",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    ConcurrencyStamp = table.Column<string>(nullable: true),
                     CreationTime = table.Column<DateTime>(nullable: false),
                     CreatorUserId = table.Column<long>(nullable: true),
-                    DeleterUserId = table.Column<long>(nullable: true),
-                    DeletionTime = table.Column<DateTime>(nullable: true),
-                    DisplayName = table.Column<string>(maxLength: 64, nullable: false),
-                    IsDefault = table.Column<bool>(nullable: false),
-                    IsDeleted = table.Column<bool>(nullable: false),
-                    IsStatic = table.Column<bool>(nullable: false),
                     LastModificationTime = table.Column<DateTime>(nullable: true),
                     LastModifierUserId = table.Column<long>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeleterUserId = table.Column<long>(nullable: true),
+                    DeletionTime = table.Column<DateTime>(nullable: true),
+                    TenantId = table.Column<int>(nullable: true),
                     Name = table.Column<string>(maxLength: 32, nullable: false),
+                    DisplayName = table.Column<string>(maxLength: 64, nullable: false),
+                    IsStatic = table.Column<bool>(nullable: false),
+                    IsDefault = table.Column<bool>(nullable: false),
                     NormalizedName = table.Column<string>(maxLength: 32, nullable: false),
-                    TenantId = table.Column<int>(nullable: true)
+                    ConcurrencyStamp = table.Column<string>(maxLength: 128, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -790,9 +836,9 @@ namespace Eblcu.Bi.Migrations
                     CreatorUserId = table.Column<long>(nullable: true),
                     LastModificationTime = table.Column<DateTime>(nullable: true),
                     LastModifierUserId = table.Column<long>(nullable: true),
-                    Name = table.Column<string>(maxLength: 256, nullable: false),
                     TenantId = table.Column<int>(nullable: true),
                     UserId = table.Column<long>(nullable: true),
+                    Name = table.Column<string>(maxLength: 256, nullable: false),
                     Value = table.Column<string>(maxLength: 2000, nullable: true)
                 },
                 constraints: table =>
@@ -812,23 +858,23 @@ namespace Eblcu.Bi.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    ConnectionString = table.Column<string>(maxLength: 1024, nullable: true),
                     CreationTime = table.Column<DateTime>(nullable: false),
                     CreatorUserId = table.Column<long>(nullable: true),
-                    CustomCssId = table.Column<Guid>(nullable: true),
-                    DeleterUserId = table.Column<long>(nullable: true),
-                    DeletionTime = table.Column<DateTime>(nullable: true),
-                    EditionId = table.Column<int>(nullable: true),
-                    IsActive = table.Column<bool>(nullable: false),
-                    IsDeleted = table.Column<bool>(nullable: false),
-                    IsInTrialPeriod = table.Column<bool>(nullable: false),
                     LastModificationTime = table.Column<DateTime>(nullable: true),
                     LastModifierUserId = table.Column<long>(nullable: true),
-                    LogoFileType = table.Column<string>(maxLength: 64, nullable: true),
-                    LogoId = table.Column<Guid>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeleterUserId = table.Column<long>(nullable: true),
+                    DeletionTime = table.Column<DateTime>(nullable: true),
+                    TenancyName = table.Column<string>(maxLength: 64, nullable: false),
                     Name = table.Column<string>(maxLength: 128, nullable: false),
+                    ConnectionString = table.Column<string>(maxLength: 1024, nullable: true),
+                    IsActive = table.Column<bool>(nullable: false),
+                    EditionId = table.Column<int>(nullable: true),
                     SubscriptionEndDateUtc = table.Column<DateTime>(nullable: true),
-                    TenancyName = table.Column<string>(maxLength: 64, nullable: false)
+                    IsInTrialPeriod = table.Column<bool>(nullable: false),
+                    CustomCssId = table.Column<Guid>(nullable: true),
+                    LogoId = table.Column<Guid>(nullable: true),
+                    LogoFileType = table.Column<string>(maxLength: 64, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -865,12 +911,12 @@ namespace Eblcu.Bi.Migrations
                 {
                     Id = table.Column<long>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    ClaimType = table.Column<string>(nullable: true),
-                    ClaimValue = table.Column<string>(nullable: true),
                     CreationTime = table.Column<DateTime>(nullable: false),
                     CreatorUserId = table.Column<long>(nullable: true),
                     TenantId = table.Column<int>(nullable: true),
-                    UserId = table.Column<long>(nullable: false)
+                    UserId = table.Column<long>(nullable: false),
+                    ClaimType = table.Column<string>(maxLength: 256, nullable: true),
+                    ClaimValue = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -889,10 +935,10 @@ namespace Eblcu.Bi.Migrations
                 {
                     Id = table.Column<long>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    LoginProvider = table.Column<string>(maxLength: 128, nullable: false),
-                    ProviderKey = table.Column<string>(maxLength: 256, nullable: false),
                     TenantId = table.Column<int>(nullable: true),
-                    UserId = table.Column<long>(nullable: false)
+                    UserId = table.Column<long>(nullable: false),
+                    LoginProvider = table.Column<string>(maxLength: 128, nullable: false),
+                    ProviderKey = table.Column<string>(maxLength: 256, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -913,9 +959,9 @@ namespace Eblcu.Bi.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     CreationTime = table.Column<DateTime>(nullable: false),
                     CreatorUserId = table.Column<long>(nullable: true),
-                    RoleId = table.Column<int>(nullable: false),
                     TenantId = table.Column<int>(nullable: true),
-                    UserId = table.Column<long>(nullable: false)
+                    UserId = table.Column<long>(nullable: false),
+                    RoleId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -934,11 +980,12 @@ namespace Eblcu.Bi.Migrations
                 {
                     Id = table.Column<long>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    LoginProvider = table.Column<string>(nullable: true),
-                    Name = table.Column<string>(nullable: true),
                     TenantId = table.Column<int>(nullable: true),
                     UserId = table.Column<long>(nullable: false),
-                    Value = table.Column<string>(nullable: true)
+                    LoginProvider = table.Column<string>(maxLength: 128, nullable: true),
+                    Name = table.Column<string>(maxLength: 128, nullable: true),
+                    Value = table.Column<string>(maxLength: 512, nullable: true),
+                    ExpireDate = table.Column<DateTime>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -952,6 +999,30 @@ namespace Eblcu.Bi.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "AbpEntityPropertyChanges",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    EntityChangeId = table.Column<long>(nullable: false),
+                    NewValue = table.Column<string>(maxLength: 512, nullable: true),
+                    OriginalValue = table.Column<string>(maxLength: 512, nullable: true),
+                    PropertyName = table.Column<string>(maxLength: 96, nullable: true),
+                    PropertyTypeFullName = table.Column<string>(maxLength: 192, nullable: true),
+                    TenantId = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AbpEntityPropertyChanges", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AbpEntityPropertyChanges_AbpEntityChanges_EntityChangeId",
+                        column: x => x.EntityChangeId,
+                        principalTable: "AbpEntityChanges",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AbpPermissions",
                 columns: table => new
                 {
@@ -959,10 +1030,10 @@ namespace Eblcu.Bi.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     CreationTime = table.Column<DateTime>(nullable: false),
                     CreatorUserId = table.Column<long>(nullable: true),
-                    Discriminator = table.Column<string>(nullable: false),
-                    IsGranted = table.Column<bool>(nullable: false),
-                    Name = table.Column<string>(maxLength: 128, nullable: false),
                     TenantId = table.Column<int>(nullable: true),
+                    Name = table.Column<string>(maxLength: 128, nullable: false),
+                    IsGranted = table.Column<bool>(nullable: false),
+                    Discriminator = table.Column<string>(nullable: false),
                     RoleId = table.Column<int>(nullable: true),
                     UserId = table.Column<long>(nullable: true)
                 },
@@ -989,12 +1060,12 @@ namespace Eblcu.Bi.Migrations
                 {
                     Id = table.Column<long>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    ClaimType = table.Column<string>(nullable: true),
-                    ClaimValue = table.Column<string>(nullable: true),
                     CreationTime = table.Column<DateTime>(nullable: false),
                     CreatorUserId = table.Column<long>(nullable: true),
+                    TenantId = table.Column<int>(nullable: true),
                     RoleId = table.Column<int>(nullable: false),
-                    TenantId = table.Column<int>(nullable: true)
+                    ClaimType = table.Column<string>(maxLength: 256, nullable: true),
+                    ClaimValue = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -1028,6 +1099,36 @@ namespace Eblcu.Bi.Migrations
                 columns: new[] { "IsAbandoned", "NextTryTime" });
 
             migrationBuilder.CreateIndex(
+                name: "IX_AbpEntityChanges_EntityChangeSetId",
+                table: "AbpEntityChanges",
+                column: "EntityChangeSetId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AbpEntityChanges_EntityTypeFullName_EntityId",
+                table: "AbpEntityChanges",
+                columns: new[] { "EntityTypeFullName", "EntityId" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AbpEntityChangeSets_TenantId_CreationTime",
+                table: "AbpEntityChangeSets",
+                columns: new[] { "TenantId", "CreationTime" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AbpEntityChangeSets_TenantId_Reason",
+                table: "AbpEntityChangeSets",
+                columns: new[] { "TenantId", "Reason" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AbpEntityChangeSets_TenantId_UserId",
+                table: "AbpEntityChangeSets",
+                columns: new[] { "TenantId", "UserId" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AbpEntityPropertyChanges_EntityChangeId",
+                table: "AbpEntityPropertyChanges",
+                column: "EntityChangeId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_AbpFeatures_EditionId_Name",
                 table: "AbpFeatures",
                 columns: new[] { "EditionId", "Name" });
@@ -1048,12 +1149,12 @@ namespace Eblcu.Bi.Migrations
                 columns: new[] { "TenantId", "Source", "LanguageName", "Key" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_AbpNotificationSubscriptions_NotificationName_EntityTypeName_EntityId_UserId",
+                name: "IX_AbpNotificationSubscriptions_NotificationName_EntityTypeName~",
                 table: "AbpNotificationSubscriptions",
                 columns: new[] { "NotificationName", "EntityTypeName", "EntityId", "UserId" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_AbpNotificationSubscriptions_TenantId_NotificationName_EntityTypeName_EntityId_UserId",
+                name: "IX_AbpNotificationSubscriptions_TenantId_NotificationName_Entit~",
                 table: "AbpNotificationSubscriptions",
                 columns: new[] { "TenantId", "NotificationName", "EntityTypeName", "EntityId", "UserId" });
 
@@ -1208,7 +1309,7 @@ namespace Eblcu.Bi.Migrations
                 columns: new[] { "UserId", "TenantId" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_AbpUserLoginAttempts_TenancyName_UserNameOrEmailAddress_Result",
+                name: "IX_AbpUserLoginAttempts_TenancyName_UserNameOrEmailAddress_Resu~",
                 table: "AbpUserLoginAttempts",
                 columns: new[] { "TenancyName", "UserNameOrEmailAddress", "Result" });
 
@@ -1362,6 +1463,9 @@ namespace Eblcu.Bi.Migrations
                 name: "AbpBackgroundJobs");
 
             migrationBuilder.DropTable(
+                name: "AbpEntityPropertyChanges");
+
+            migrationBuilder.DropTable(
                 name: "AbpFeatures");
 
             migrationBuilder.DropTable(
@@ -1438,33 +1542,39 @@ namespace Eblcu.Bi.Migrations
 
             migrationBuilder.DropTable(
                 name: "charge_studentsdata",
-                schema: "CMS");
+                schema: "liferay_zhx_dev");
 
             migrationBuilder.DropTable(
                 name: "drop_out_studentsdata",
-                schema: "CMS");
+                schema: "liferay_zhx_dev");
 
             migrationBuilder.DropTable(
                 name: "entry_recruit_studentsdata",
-                schema: "CMS");
+                schema: "liferay_zhx_dev");
 
             migrationBuilder.DropTable(
                 name: "graduate_studentsdata",
-                schema: "CMS");
+                schema: "liferay_zhx_dev");
 
             migrationBuilder.DropTable(
                 name: "nograduate_studentsdata",
-                schema: "CMS");
+                schema: "liferay_zhx_dev");
 
             migrationBuilder.DropTable(
                 name: "zhx_student_inreading",
-                schema: "CMS");
+                schema: "liferay_zhx_dev");
+
+            migrationBuilder.DropTable(
+                name: "AbpEntityChanges");
 
             migrationBuilder.DropTable(
                 name: "AbpRoles");
 
             migrationBuilder.DropTable(
                 name: "AbpEditions");
+
+            migrationBuilder.DropTable(
+                name: "AbpEntityChangeSets");
 
             migrationBuilder.DropTable(
                 name: "AbpUsers");

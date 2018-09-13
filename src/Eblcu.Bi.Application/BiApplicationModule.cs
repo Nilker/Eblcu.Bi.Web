@@ -5,6 +5,8 @@ using Abp.Reflection.Extensions;
 using Eblcu.Bi.Authorization;
 using Eblcu.Bi.Student.Dtos.CustomMapper;
 using Eblcu.Bi.StudentPermissions;
+using Eblcu.Bi.Test.Authorization;
+using Eblcu.Bi.Test.Mapper;
 
 namespace Eblcu.Bi
 {
@@ -28,10 +30,10 @@ namespace Eblcu.Bi
             Configuration.Authorization.Providers.Add<EnrollRecruitAppAuthorizationProvider>();
             Configuration.Authorization.Providers.Add<StudentManageAppAuthorizationProvider>();
             Configuration.Authorization.Providers.Add<StudentPayAppAuthorizationProvider>();
-          
 
 
 
+            Configuration.Authorization.Providers.Add<ProductAuthorizationProvider>();
 
 
             Configuration.Modules.AbpAutoMapper().Configurators.Add(configuration =>
@@ -44,6 +46,9 @@ namespace Eblcu.Bi
                 Customergraduate_studentsdataMapper.CreateMappings(configuration);
                 Customernograduate_studentsdataMapper.CreateMappings(configuration);
                 Customerzhx_student_inreadingMapper.CreateMappings(configuration);
+
+
+                ProductMapper.CreateMappings(configuration);
             });
         }
 
