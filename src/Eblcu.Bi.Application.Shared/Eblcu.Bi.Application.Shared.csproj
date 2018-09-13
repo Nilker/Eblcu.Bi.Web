@@ -16,7 +16,7 @@
   </ItemGroup> 
 
   <ItemGroup>
-    <PackageReference Include="Abp.Web.Common" Version="3.3.0" />
+    <PackageReference Include="Abp.Web.Common" Version="3.8.2" />
   </ItemGroup> 
 
   <ItemGroup>

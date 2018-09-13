@@ -3,7 +3,7 @@
   <Import Project="..\..\common.props"></Import>
 
   <PropertyGroup>
-    <TargetFrameworks>net461;netcoreapp2.0</TargetFrameworks>
+    <TargetFrameworks>net461;netcoreapp2.1</TargetFrameworks>
     <AssetTargetFallback>$(AssetTargetFallback);portable-net45+win8+wp8+wpa81;</AssetTargetFallback>
     <AssemblyName>Eblcu.Bi.Application</AssemblyName>
     <PackageId>Eblcu.Bi.Application</PackageId>
@@ -16,7 +16,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="EPPlus.Core" Version="1.5.3" />
+    <PackageReference Include="EPPlus.Core" Version="1.5.4" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
@@ -41,7 +41,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net461|AnyCPU'">
-    <DocumentationFile>C:\Users\lihl\Desktop\zs\aspnet-core2\src\Eblcu.Bi.Web.Host\bin\Debug\netcoreapp2.0\Eblcu.Bi.Application.xml</DocumentationFile>
+    <DocumentationFile>C:\Users\lihl\Desktop\zs\aspnet-core2\src\Eblcu.Bi.Web.Host\bin\Debug\netcoreapp2.1\Eblcu.Bi.Application.xml</DocumentationFile>
   </PropertyGroup>
 
 </Project>

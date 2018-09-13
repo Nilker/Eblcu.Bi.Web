@@ -11,13 +11,14 @@ namespace Eblcu.Bi.Web.Startup
     {
         public void Apply(Operation operation, OperationFilterContext context)
         {
-            var actionAttrs = context.ControllerActionDescriptor.MethodInfo.GetCustomAttributes(true).ToList();
+            var actionAttrs = context.MethodInfo.GetCustomAttributes(true).ToList();
             if (actionAttrs.OfType<AbpAllowAnonymousAttribute>().Any())
             {
                 return;
             }
 
-            var controllerAttrs = context.ControllerActionDescriptor.ControllerTypeInfo.GetCustomAttributes(true);
+            //var controllerAttrs = context.ControllerActionDescriptor.ControllerTypeInfo.GetCustomAttributes(true);
+            var controllerAttrs = context.ApiDescription.ControllerAttributes();// .ControllerTypeInfo.GetCustomAttributes(true);
             var actionAbpAuthorizeAttrs = actionAttrs.OfType<AbpAuthorizeAttribute>().ToList();
 
             if (!actionAbpAuthorizeAttrs.Any() && controllerAttrs.OfType<AbpAllowAnonymousAttribute>().Any())
