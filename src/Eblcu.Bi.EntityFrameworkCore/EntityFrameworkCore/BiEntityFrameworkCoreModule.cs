@@ -4,6 +4,7 @@ using Abp.Modules;
 using Abp.Reflection.Extensions;
 using Abp.Zero.EntityFrameworkCore;
 using Eblcu.Bi.Configuration;
+using Eblcu.Bi.EntityFrameworkCore.SecondDbContext;
 using Eblcu.Bi.Migrations.Seed;
 
 namespace Eblcu.Bi.EntityFrameworkCore
@@ -33,6 +34,19 @@ namespace Eblcu.Bi.EntityFrameworkCore
                     else
                     {
                         BiDbContextConfigurer.Configure(options.DbContextOptions, options.ConnectionString);
+                    }
+                });
+
+                // Configure second DbContext
+                Configuration.Modules.AbpEfCore().AddDbContext<SecondDbContext.SecondDbContext>(options =>
+                {
+                    if (options.ExistingConnection != null)
+                    {
+                        SecondDbContextConfigurer.Configure(options.DbContextOptions, options.ExistingConnection);
+                    }
+                    else
+                    {
+                        SecondDbContextConfigurer.Configure(options.DbContextOptions, options.ConnectionString);
                     }
                 });
             }
